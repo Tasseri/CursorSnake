@@ -24,27 +24,27 @@ public class Main {
             }
             Player[] players = new Player[Integer.parseInt("" + numberOfplayers.charAt(0))];
 
+            int numberOfEnemies = players.length == 1 ? 3 : 0;
 
-            //       players[1].keyInputs[0] = 'w';
-            int numberOfEnemies = Integer.parseInt(JOptionPane.showInputDialog("Ange antal fiender!"));
             Game game = new Game(players, numberOfEnemies);
 
             do {
                 game.addObstaclesToBoard();
                 updateScreen(game.getPlayers(), terminal, game.getEnemies());
-                game.changeMomentumOfPlayers(game.getPlayers(), terminal);
-                game.movePlayersByMomentum(players);
-                //           game.board[players[i].x][ playerx[i].y]
+                game.changeMomentumOfPlayers(terminal);
+                game.movePlayersByMomentum();
                 game.moveEnemiesTowardsPlayer(game.getPlayer(0));
-                game.enemyTryKillPlayer(players[0], game.getEnemy(0));
-                game.playersDraw(players);
-                game.playersHitObejct(players);
-
-                if (game.isAllPlayersDead()) {
+                game.enemiesTryKillPlayers();
+                game.playersDraw();
+                game.playersHitObject();
+                if (players.length > 1 && game.isOnlyOnePlayerAlive()) {
+                    game.endGame(game.isOnlyOnePlayerAlive());
+                }
+                else if (game.isAllPlayersDead()) {
                     game.endGame();
                 }
             } while (!game.isGameOver());
-            updateScreen(players, terminal, game.getEnemies());
+            updateScreen(game.getPlayers(), terminal, game.getEnemies());
             System.out.println("Game Over!");
             if (game.isDraw()) {
                 System.out.println("Nobody Wins!");

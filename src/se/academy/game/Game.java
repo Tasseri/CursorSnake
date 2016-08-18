@@ -12,7 +12,7 @@ import java.util.Random;
  * Created by Administrator on 2016-08-17.
  */
 public class Game {
-    public boolean[][] board = new boolean[20][20];
+    public boolean[][] board = new boolean[21][21];
     private Player[] players;
     private Enemy[] enemies;
     //   private String[] playerList = {"1 Player", "2 Players", "3 Players", "4 Players"};
@@ -79,26 +79,25 @@ public class Game {
 
     }
 
-    public void movePlayersByMomentum(Player[] playerx) {
-        for (int i = 0; i < playerx.length; i++) { //Applies the momentum and moves the player
-            playerx[i].trackMovement(playerx[i].x, playerx[i].y);
+    public void movePlayersByMomentum() {
+        for (int i = 0; i < players.length; i++) { //Applies the momentum and moves the player
+            players[i].trackMovement(players[i].x, players[i].y);
 
-            playerx[i].moveByMomentum();
+            players[i].moveByMomentum();
         }
     }
 
     /**
      * takes keyinputs calculates which Player it belongs to and changes the momentum of the player in that direction.
      *
-     * @param playerx
      * @param terminal
      * @throws InterruptedException
      */
-    public void changeMomentumOfPlayers(Player[] playerx, Terminal terminal) throws InterruptedException {
+    public void changeMomentumOfPlayers(Terminal terminal) throws InterruptedException {
         Key key;
         LocalTime tm = LocalTime.now();
 
-        boolean[] keysPressed = new boolean[playerx.length];
+        boolean[] keysPressed = new boolean[players.length];
         for (int i = 0; i < keysPressed.length; i++) {
             keysPressed[0] = false;
         }
@@ -109,15 +108,15 @@ public class Game {
 
                 char keyKind = key.getCharacter();
 
-                for (int i = 0; i < playerx.length; i++) {
+                for (int i = 0; i < players.length; i++) {
                     for (int j = 0; j < 2; j++) {
-                        if (playerx[i].getKeyInput(j) == keyKind && !keysPressed[i]) {
+                        if (players[i].getKeyInput(j) == keyKind && !keysPressed[i]) {
                             switch (j) {
                                 case 0:
-                                    playerx[i].changeMomentum(1);
+                                    players[i].changeMomentum(1);
                                     break;
                                 case 1:
-                                    playerx[i].changeMomentum(-1);
+                                    players[i].changeMomentum(-1);
                                     break;
                             }
                             keysPressed[i] = true;
@@ -155,7 +154,7 @@ public class Game {
     //end of Enemy methods
 
     //game logic methods follow
-    public void playersHitObejct(Player[] players) {
+    public void playersHitObject() {
         for (int i = 0; i < players.length; i++) {
             playerHitObject(players[i]);
         }
@@ -164,6 +163,13 @@ public class Game {
     public void playerHitObject(Player player) {
         if (board[player.x][player.y]) {
             player.kill();
+        }
+    }
+    public void enemiesTryKillPlayers() {
+        for (int i = 0; i < players.length; i++) {
+            for (int j = 0; j < enemies.length; j++) {
+                enemyTryKillPlayer(players[i], enemies[j]);
+            }
         }
     }
 
@@ -187,7 +193,7 @@ public class Game {
         }
     }
 
-    public void playersDraw(Player[] players) {
+    public void playersDraw() {
         for (int i = 0; i < players.length - 1; i++) {
             for (int j = i + 1; j < players.length; j++) {
                 if (i != j) {
@@ -204,10 +210,37 @@ public class Game {
     public void endGame() {
         GameOver = true;
     }
+    public void endGame(boolean playerStillAlive) {
+        System.out.println("The Winner is " + onlyOneAlive());
+        GameOver = playerStillAlive;
+    }
+
+    private String onlyOneAlive() {
+        for (int i = 0; i < players.length; i++) {
+            if (!players[i].isDead()) {
+                return "Player " + (i+1);
+            }
+        }
+        return "No players alive";
+    }
 
     public boolean isGameOver() {
         return GameOver;
     }
 
 
+    public boolean isOnlyOnePlayerAlive() {
+        int counter = 0;
+        for (int i = 0; i < players.length; i++) {
+            if (!players[i].isDead()) {
+                counter++;
+            }
+        }
+        if (counter == 1) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }
