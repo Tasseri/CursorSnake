@@ -12,14 +12,6 @@ public class Player extends Entity {
         super(x, y);
     }
 
-    private void movePlayer(int changeInX, int changeInY) {
-        if (!((this.x == 0 && changeInX < 0) || (this.x == 20 && changeInX > 0))) {
-            this.x += changeInX;
-        }
-        if (!((this.y == 0 && changeInY < 0) || (this.y == 20 && changeInY > 0))) {
-            this.y += changeInY;
-        }
-    }
 
     public char getKeyInput(int index) {
         return keyInputs[index];
@@ -33,19 +25,8 @@ public class Player extends Entity {
         keyInputs[0] = c;
     }
 
-    public void moveByMomentum() {
-        if (this.dead) {
-            //don't move
-        } else if (momentum == 'U') {
-            movePlayer(0, -1);
-        } else if (momentum == 'D') {
-            movePlayer(0, 1);
-        } else if (momentum == 'R') {
-            movePlayer(1, 0);
-        } else if (momentum == 'L') {
-            movePlayer(-1, 0);
-        }
-
+    public char getMomentumOfPlayer() {
+        return momentum;
     }
 
     public void changeMomentum(int direction) {

@@ -12,15 +12,17 @@ import java.util.Random;
  * Created by Administrator on 2016-08-17.
  */
 public class Game {
-    public boolean[][] board = new boolean[21][21];
+    public boolean[][] board;
     private Player[] players;
     private Enemy[] enemies;
     //   private String[] playerList = {"1 Player", "2 Players", "3 Players", "4 Players"};
     private boolean GameOver = false;
     private boolean draw = false;
 
-    public Game(Player[] players, int numberOfEnemies) {
+    public Game(Player[] players, int numberOfEnemies, Terminal terminal) {
         this.players = players;
+
+        board = new boolean[terminal.getTerminalSize().getColumns()][terminal.getTerminalSize().getRows()];
 
         this.enemies = new Enemy[numberOfEnemies];
         for (int i = 0; i < numberOfEnemies; i++) {
@@ -31,6 +33,18 @@ public class Game {
         for (int i = 0; i < players.length; i++) {
             addPlayer(i);
             keyAddPlayer(i);
+        }
+        AddBoarders();
+    }
+
+    private void AddBoarders() {
+        for (int i = 0; i < board[0].length; i++ ) {
+            board[0][i] = true;
+            board[board.length - 1][i] = true;
+        }
+        for (int i = 0; i < board.length; i++) {
+            board[i][0] = true;
+            board[i][board[0].length - 1] = true;
         }
     }
 
@@ -78,13 +92,35 @@ public class Game {
         return true;
 
     }
+    private void movePlayer(int changeInX, int changeInY, Player player) {
+        if (!((player.x == 0 && changeInX < 0) || (player.x == board.length && changeInX > 0))) {
+            player.x += changeInX;
+        }
+        if (!((player.y == 0 && changeInY < 0) || (player.y == board[0].length && changeInY > 0))) {
+            player.y += changeInY;
+        }
+    }
 
     public void movePlayersByMomentum() {
         for (int i = 0; i < players.length; i++) { //Applies the momentum and moves the player
             players[i].trackMovement(players[i].x, players[i].y);
 
-            players[i].moveByMomentum();
+            moveByMomentum(players[i]);
         }
+    }
+    public void moveByMomentum(Player player) {
+        if (player.isDead()) {
+            //don't move
+        } else if (player.getMomentumOfPlayer() == 'U') {
+            movePlayer(0, -1, player);
+        } else if (player.getMomentumOfPlayer() == 'D') {
+            movePlayer(0, 1, player);
+        } else if (player.getMomentumOfPlayer() == 'R') {
+            movePlayer(1, 0, player);
+        } else if (player.getMomentumOfPlayer() == 'L') {
+            movePlayer(-1, 0, player);
+        }
+
     }
 
     /**
@@ -127,7 +163,7 @@ public class Game {
                 System.out.println(key.getCharacter() + " " + key.getKind());
             }
 
-        } while (1 > Duration.between(tm, LocalTime.now()).getSeconds()); //Seconds before the game updates
+        } while (1 > (Duration.between(tm, LocalTime.now()).getNano() / 200000000)); //Seconds before the game updates
 
     }
     //end of Player methods

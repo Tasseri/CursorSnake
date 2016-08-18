@@ -16,21 +16,21 @@ public class Main {
         String newGame = "y";
         do {
             terminal.clearScreen();
-            String numberOfplayers = (String) JOptionPane.showInputDialog(null, "Välj Antal Spelare", "Antal Spelare",
+            String numberOfPlayers = (String) JOptionPane.showInputDialog(null, "Välj Antal Spelare", "Antal Spelare",
                     JOptionPane.QUESTION_MESSAGE, null, playerList, playerList[0]);
-            if (numberOfplayers == null) {
+            if (numberOfPlayers == null) {
                 System.out.println("Spelet avbröts!");
                 exit(0);
             }
-            Player[] players = new Player[Integer.parseInt("" + numberOfplayers.charAt(0))];
+            Player[] players = new Player[Integer.parseInt("" + numberOfPlayers.charAt(0))];
 
             int numberOfEnemies = players.length == 1 ? 3 : 0;
 
-            Game game = new Game(players, numberOfEnemies);
+            Game game = new Game(players, numberOfEnemies, terminal);
 
             do {
                 game.addObstaclesToBoard();
-                updateScreen(game.getPlayers(), terminal, game.getEnemies());
+                updateScreen(game, terminal);
                 game.changeMomentumOfPlayers(terminal);
                 game.movePlayersByMomentum();
                 game.moveEnemiesTowardsPlayer(game.getPlayer(0));
@@ -39,12 +39,11 @@ public class Main {
                 game.playersHitObject();
                 if (players.length > 1 && game.isOnlyOnePlayerAlive()) {
                     game.endGame(game.isOnlyOnePlayerAlive());
-                }
-                else if (game.isAllPlayersDead()) {
+                } else if (game.isAllPlayersDead()) {
                     game.endGame();
                 }
             } while (!game.isGameOver());
-            updateScreen(game.getPlayers(), terminal, game.getEnemies());
+            updateScreen(game, terminal);
             System.out.println("Game Over!");
             if (game.isDraw()) {
                 System.out.println("Nobody Wins!");
@@ -57,14 +56,22 @@ public class Main {
         System.exit(0);
     }
 
-    public static void updateScreen(Player[] playerx, Terminal terminal, Enemy[] enemies) {
+    public static void updateScreen(Game game, Terminal terminal) {
 //        terminal.clearScreen();
-        for (int i = 0; i < playerx.length; i++) {
-            terminal.moveCursor(playerx[i].x, playerx[i].y);
+        for (int i = 0; i < game.board.length; i++) {
+            for (int j = 0; j < game.board[i].length; j++) {
+                if (game.board[i][j]) {
+                    terminal.moveCursor(i, j);
+                    terminal.putCharacter('\u2588');
+                }
+            }
+        }
+        for (int i = 0; i < game.getPlayers().length; i++) {
+            terminal.moveCursor(game.getPlayer(i).x, game.getPlayer(i).y);
             terminal.putCharacter((char) ((int) 'O' + i));
         }
-        for (int i = 0; i < enemies.length; i++) {
-            terminal.moveCursor(enemies[i].x, enemies[i].y);
+        for (int i = 0; i < game.getEnemies().length; i++) {
+            terminal.moveCursor(game.getEnemy(i).x, game.getEnemy(i).y);
             terminal.putCharacter('X');
         }
         terminal.moveCursor(0, 0);
