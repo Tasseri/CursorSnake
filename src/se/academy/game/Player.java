@@ -8,8 +8,13 @@ public class Player extends Entity {
     private char momentum = 'U';
     private boolean dead = false;
 
-    Player(int x, int y) {
+    //enum ;
+
+    public Player(int x, int y) {
         super(x, y);
+    }
+    public Player(Coordinates coord) {
+        super(coord);
     }
 
 

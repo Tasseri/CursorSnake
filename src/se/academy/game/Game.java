@@ -19,8 +19,8 @@ public class Game {
     private boolean GameOver = false;
     private boolean draw = false;
 
-    public Game(Player[] players, int numberOfEnemies, Terminal terminal) {
-        this.players = players;
+    public Game(int numberOfPlayers, int numberOfEnemies, Terminal terminal) {
+        this.players = new Player[numberOfPlayers];
 
         board = new boolean[terminal.getTerminalSize().getColumns()][terminal.getTerminalSize().getRows()];
 
@@ -33,8 +33,10 @@ public class Game {
         for (int i = 0; i < players.length; i++) {
             addPlayer(i);
             keyAddPlayer(i);
+            players[i].setApparence((char) ((int) 'O' + i));
         }
         AddBoarders();
+        addObstaclesToBoard();
     }
 
     private void AddBoarders() {
@@ -58,6 +60,11 @@ public class Game {
             board[players[i].getCoord().getX()][players[i].getCoord().getY()] = true;
         }
     }
+
+    private Coordinates randomCoordinates() {
+        Random rand = new Random();
+        return new Coordinates(rand.nextInt(board[0].length - 5) + 2, rand.nextInt(board[0].length - 5) + 2);
+    }
     //end of Board methods
 
     //Player methods below
@@ -68,7 +75,7 @@ public class Game {
     public void addPlayer(int playerNumber) {
         Random rand = new Random();
         if (playerNumber < this.players.length && playerNumber >= 0) {
-            players[playerNumber] = new Player((rand.nextInt(board.length - 5) + 2), (rand.nextInt(board[0].length - 5) + 2));
+            players[playerNumber] = new Player(randomCoordinates());
         }
     }
 
@@ -171,7 +178,14 @@ public class Game {
     //Enemy methods below
     public void addEnemy(int enemyNumber) {
         Random rand = new Random();
-        enemies[enemyNumber] = new Enemy((rand.nextInt(20) + 1), (rand.nextInt(20) + 1));
+        if (enemyNumber % 2 == 0) {
+            enemies[enemyNumber] = new StupidEnemy(randomCoordinates());
+            enemies[enemyNumber].setApparence('X');
+        }
+        else {
+            enemies[enemyNumber] = new SmartEnemy(randomCoordinates());
+            enemies[enemyNumber].setApparence('Y');
+        }
     }
 
     public Enemy getEnemy(int enemyNumber) {
@@ -194,9 +208,9 @@ public class Game {
         gameCountdown(3);
     }
     public void gameCountdown(int countDownTimer) throws InterruptedException {
-        for (int i = 0; i < countDownTimer; i++) {
+        for (int i = countDownTimer; i > 0; i--) {
             System.out.println("Game starts in: " + i);
-            Thread.sleep((long) 1000*i);
+            Thread.sleep((long) 1000);
         }
     }
     public void playersHitObject() {
@@ -275,7 +289,6 @@ public class Game {
         return GameOver;
     }
 
-
     public boolean isOnlyOnePlayerAlive() {
         int counter = 0;
         for (int i = 0; i < players.length; i++) {
@@ -289,5 +302,19 @@ public class Game {
         else {
             return false;
         }
+    }
+    public void updateState() {
+
+        movePlayersByMomentum();
+        moveEnemiesTowardsPlayer(getPlayer(0));
+        enemiesTryKillPlayers();
+        playersDraw();
+        playersHitObject();
+        if (players.length > 1 && isOnlyOnePlayerAlive()) {
+            endGame(isOnlyOnePlayerAlive());
+        } else if (isAllPlayersDead()) {
+            endGame();
+        }
+        addObstaclesToBoard();
     }
 }

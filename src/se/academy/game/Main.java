@@ -22,28 +22,20 @@ public class Main {
                 System.out.println("Spelet avbröts!");
                 exit(0);
             }
-            Player[] players = new Player[Integer.parseInt("" + numberOfPlayers.charAt(0))];
+            int players = Integer.parseInt("" + numberOfPlayers.charAt(0));
 
-            int numberOfEnemies = players.length == 1 ? 3 : 0;
+            int numberOfEnemies = players == 1 ? 3 : 0;
 
             Game game = new Game(players, numberOfEnemies, terminal);
-
+            updateScreen(game, terminal);
             game.gameCountdown();
 
             do {
-                game.addObstaclesToBoard();
-                updateScreen(game, terminal);
+
                 game.changeMomentumOfPlayers(terminal);
-                game.movePlayersByMomentum();
-                game.moveEnemiesTowardsPlayer(game.getPlayer(0));
-                game.enemiesTryKillPlayers();
-                game.playersDraw();
-                game.playersHitObject();
-                if (players.length > 1 && game.isOnlyOnePlayerAlive()) {
-                    game.endGame(game.isOnlyOnePlayerAlive());
-                } else if (game.isAllPlayersDead()) {
-                    game.endGame();
-                }
+                game.updateState();
+                updateScreen(game, terminal);
+
             } while (!game.isGameOver());
             updateScreen(game, terminal);
             System.out.println("Game Over!");
@@ -59,7 +51,7 @@ public class Main {
     }
 
     public static void updateScreen(Game game, Terminal terminal) {
-//        terminal.clearScreen();
+        terminal.clearScreen();
         for (int i = 0; i < game.board.length; i++) {
             for (int j = 0; j < game.board[i].length; j++) {
                 if (game.board[i][j]) {
@@ -70,11 +62,11 @@ public class Main {
         }
         for (int i = 0; i < game.getPlayers().length; i++) {
             terminal.moveCursor(game.getPlayer(i).getCoord().getX(), game.getPlayer(i).getCoord().getY());
-            terminal.putCharacter((char) ((int) 'O' + i));
+            terminal.putCharacter(game.getPlayer(i).getApparence());
         }
         for (int i = 0; i < game.getEnemies().length; i++) {
             terminal.moveCursor(game.getEnemy(i).getCoord().getX(), game.getEnemy(i).getCoord().getY());
-            terminal.putCharacter('X');
+            terminal.putCharacter(game.getEnemy(i).getApparence());
         }
         terminal.moveCursor(0, 0);
     }

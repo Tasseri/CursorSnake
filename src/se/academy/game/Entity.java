@@ -8,14 +8,19 @@ import java.util.List;
  */
 public abstract class Entity {
     private Coordinates coord;
-    List<Coordinates> movements;
+    private List<Coordinates> movements;
+    private char Apparence = 'N';
 
     public Entity() {
         coord = new Coordinates(0,0);
-        movements = new LinkedList<>();
+        movements = new LinkedList<>(); //arraydeck
     }
     public Entity(int x, int y) {
         coord = new Coordinates(x,y);
+        movements = new LinkedList<>();
+    }
+    public Entity(Coordinates coord) {
+        this.coord = coord;
         movements = new LinkedList<>();
     }
 
@@ -56,5 +61,13 @@ public abstract class Entity {
     }
     public int howManySquaresMoved() {
         return movements.size();
+    }
+
+    public char getApparence() {
+        return Apparence;
+    }
+
+    public void setApparence(char apparence) {
+        Apparence = apparence;
     }
 }
