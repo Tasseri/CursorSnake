@@ -10,17 +10,17 @@ public class Enemy extends Entity {
     }
 
     public void moveEnemyTowardsPlayer(Player player) {
-        if (this.x > player.x) {
-            this.x--;
+        if (this.getCoord().getX() > player.getCoord().getX()) {
+            changeOneInX(-1);
         }
-        else if (this.x < player.x) {
-            this.x++;
+        else if (this.getCoord().getX() < player.getCoord().getX()) {
+            changeOneInX(1);
         }
-        else if (this.y > player.y ) {
-            this.y--;
+        else if (this.getCoord().getY() > player.getCoord().getY() ) {
+            changeOneInY(-1);
         }
-        else if (this.y < player.y) {
-            this.y++;
+        else if (this.getCoord().getY() < player.getCoord().getY()) {
+            changeOneInY(1);
         }
 
     }

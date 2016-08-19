@@ -7,18 +7,48 @@ import java.util.List;
  * Created by Administrator on 2016-08-17.
  */
 public abstract class Entity {
-    public int x, y;
+    private Coordinates coord;
     List<Coordinates> movements;
 
     public Entity() {
-        this.x = 0;
-        this.y = 0;
+        coord = new Coordinates(0,0);
         movements = new LinkedList<>();
     }
     public Entity(int x, int y) {
-        this.x = x;
-        this.y = y;
+        coord = new Coordinates(x,y);
         movements = new LinkedList<>();
+    }
+
+    public Coordinates getCoord() {
+        return coord;
+    }
+    public void changeOneInX (int change) {
+        if (change > 0) {
+            addOneToX();
+        }
+        else if (change < 0){
+            removeOneOffX();
+        }
+    }
+    public void changeOneInY (int change) {
+        if (change > 0) {
+            addOneToY();
+        }
+        else if (change < 0) {
+            removeOneOffY();
+        }
+    }
+    public void addOneToX() {
+        coord.setX(coord.getX() + 1);
+    }
+    public void removeOneOffX() {
+        coord.setX(coord.getX() - 1);
+    }
+    public void addOneToY() {
+        coord.setY(coord.getY() + 1);
+    }
+    public void removeOneOffY() {
+        coord.setY(coord.getY() - 1);
     }
 
     public void trackMovement(int x, int y) {

@@ -55,7 +55,7 @@ public class Game {
 
     private void addPlayerTailToBoard() {
         for (int i = 0; i < players.length; i++) {
-            board[players[i].x][players[i].y] = true;
+            board[players[i].getCoord().getX()][players[i].getCoord().getY()] = true;
         }
     }
     //end of Board methods
@@ -68,7 +68,7 @@ public class Game {
     public void addPlayer(int playerNumber) {
         Random rand = new Random();
         if (playerNumber < this.players.length && playerNumber >= 0) {
-            players[playerNumber] = new Player((rand.nextInt(19) + 1), (rand.nextInt(20) + 1));
+            players[playerNumber] = new Player((rand.nextInt(board.length - 5) + 2), (rand.nextInt(board[0].length - 5) + 2));
         }
     }
 
@@ -93,17 +93,17 @@ public class Game {
 
     }
     private void movePlayer(int changeInX, int changeInY, Player player) {
-        if (!((player.x == 0 && changeInX < 0) || (player.x == board.length && changeInX > 0))) {
-            player.x += changeInX;
+        if (!((player.getCoord().getX() == 0 && changeInX < 0) || (player.getCoord().getX() == board.length && changeInX > 0))) {
+           player.changeOneInX(changeInX);
         }
-        if (!((player.y == 0 && changeInY < 0) || (player.y == board[0].length && changeInY > 0))) {
-            player.y += changeInY;
+        if (!((player.getCoord().getY() == 0 && changeInY < 0) || (player.getCoord().getY() == board[0].length && changeInY > 0))) {
+            player.changeOneInY(changeInY);
         }
     }
 
     public void movePlayersByMomentum() {
         for (int i = 0; i < players.length; i++) { //Applies the momentum and moves the player
-            players[i].trackMovement(players[i].x, players[i].y);
+            players[i].trackMovement(players[i].getCoord().getX(), players[i].getCoord().getY());
 
             moveByMomentum(players[i]);
         }
@@ -163,7 +163,7 @@ public class Game {
                 System.out.println(key.getCharacter() + " " + key.getKind());
             }
 
-        } while (1 > (Duration.between(tm, LocalTime.now()).getNano() / 200000000)); //Seconds before the game updates
+        } while (1 > (Duration.between(tm, LocalTime.now()).getNano() / 300000000)); //Seconds before the game updates
 
     }
     //end of Player methods
@@ -190,6 +190,15 @@ public class Game {
     //end of Enemy methods
 
     //game logic methods follow
+    public void gameCountdown() throws InterruptedException {
+        gameCountdown(3);
+    }
+    public void gameCountdown(int countDownTimer) throws InterruptedException {
+        for (int i = 0; i < countDownTimer; i++) {
+            System.out.println("Game starts in: " + i);
+            Thread.sleep((long) 1000*i);
+        }
+    }
     public void playersHitObject() {
         for (int i = 0; i < players.length; i++) {
             playerHitObject(players[i]);
@@ -197,7 +206,7 @@ public class Game {
     }
 
     public void playerHitObject(Player player) {
-        if (board[player.x][player.y]) {
+        if (board[player.getCoord().getX()][player.getCoord().getY()]) {
             player.kill();
         }
     }
@@ -210,14 +219,16 @@ public class Game {
     }
 
     public void enemyTryKillPlayer(Player player1, Enemy enemy1) {
-        if ((player1.x == enemy1.x) && (player1.y == enemy1.y)) {
+        if ((player1.getCoord().getX() == enemy1.getCoord().getX()) &&
+                (player1.getCoord().getY() == enemy1.getCoord().getY())) {
             player1.kill();
         }
     }
 
     public void playerDraw(Player player1, Player player2) {
         boolean deadAlready = false;
-        if ((player1.x == player2.x) && (player1.y == player2.y)) {
+        if ((player1.getCoord().getX() == player2.getCoord().getX()) &&
+                (player1.getCoord().getY() == player2.getCoord().getY())) {
             if (player1.isDead() || player2.isDead()) {
                 deadAlready = true;
             }

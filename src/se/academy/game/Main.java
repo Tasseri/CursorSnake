@@ -28,6 +28,8 @@ public class Main {
 
             Game game = new Game(players, numberOfEnemies, terminal);
 
+            game.gameCountdown();
+
             do {
                 game.addObstaclesToBoard();
                 updateScreen(game, terminal);
@@ -67,11 +69,11 @@ public class Main {
             }
         }
         for (int i = 0; i < game.getPlayers().length; i++) {
-            terminal.moveCursor(game.getPlayer(i).x, game.getPlayer(i).y);
+            terminal.moveCursor(game.getPlayer(i).getCoord().getX(), game.getPlayer(i).getCoord().getY());
             terminal.putCharacter((char) ((int) 'O' + i));
         }
         for (int i = 0; i < game.getEnemies().length; i++) {
-            terminal.moveCursor(game.getEnemy(i).x, game.getEnemy(i).y);
+            terminal.moveCursor(game.getEnemy(i).getCoord().getX(), game.getEnemy(i).getCoord().getY());
             terminal.putCharacter('X');
         }
         terminal.moveCursor(0, 0);
