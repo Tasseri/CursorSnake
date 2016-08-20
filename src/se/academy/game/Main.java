@@ -4,12 +4,13 @@ import com.googlecode.lanterna.TerminalFacade;
 import com.googlecode.lanterna.terminal.Terminal;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.nio.charset.Charset;
 
 import static java.lang.System.exit;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         Terminal terminal = TerminalFacade.createTerminal(System.in, System.out, Charset.forName("UTF8"));
         terminal.enterPrivateMode();
         String[] playerList = {"1 Player", "2 Players", "3 Players", "4 Players"};

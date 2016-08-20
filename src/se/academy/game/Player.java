@@ -7,14 +7,27 @@ public class Player extends Entity {
     private char[] keyInputs = {'R', 'L'};
     private char momentum = 'U';
     private boolean dead = false;
+    private String name = "Player 1";
 
     //enum ;
-
+    // om vi berstämmer oss för nya funktioner så tar vi bort dessa constructorer
+    // för stundern så overloadar jag bara dom
     public Player(int x, int y) {
         super(x, y);
     }
+
     public Player(Coordinates coord) {
         super(coord);
+    }
+
+    public Player(int x, int y, int number) {
+        super(x, y);
+        name = "Player " + (number+ 1 );
+    }
+
+    public Player(Coordinates coord, int number) {
+        super(coord);
+        name = "Player " + (number + 1);
     }
 
 
@@ -22,6 +35,7 @@ public class Player extends Entity {
         return keyInputs[index];
     }
 
+    // ordningen känns märklig, tycker[left, right] känns mer naturligt
     public void setKeyInputLeft(char c) {
         keyInputs[1] = c;
     }
@@ -49,7 +63,14 @@ public class Player extends Entity {
     public void kill() {
         dead = true;
     }
+
     public boolean isDead() {
         return dead;
     }
+
+    public String getName() {
+        return name;
+    }
+
+
 }
