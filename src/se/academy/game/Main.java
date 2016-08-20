@@ -53,6 +53,8 @@ public class Main {
 
     public static void updateScreen(Game game, Terminal terminal) {
         terminal.clearScreen();
+
+        // placee Wals with a foor loop that cycles thrue wall list
         for (int i = 0; i < game.board.length; i++) {
             for (int j = 0; j < game.board[i].length; j++) {
                 if (game.board[i][j]) {
@@ -60,6 +62,17 @@ public class Main {
                     terminal.putCharacter('\u2588');
                 }
             }
+        }
+        // old walls ends here, need to sort out tail before removal
+
+        for (Wall wall :
+                game.getWalls()) {
+
+            terminal.moveCursor(wall.getCoord().getX(), wall.getCoord().getY());
+            // System.out.println(wall.getCoord().getX() + " " + wall.getCoord().getY());
+            terminal.putCharacter(wall.getApparence());
+           // System.out.println(walcount++);
+
         }
         for (int i = 0; i < game.getPlayers().length; i++) {
             terminal.moveCursor(game.getPlayer(i).getCoord().getX(), game.getPlayer(i).getCoord().getY());

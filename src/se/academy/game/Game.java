@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -16,6 +18,7 @@ public class Game {
     public boolean[][] board;
     private Player[] players;
     private Enemy[] enemies;
+    private List<Wall> walls;
     //   private String[] playerList = {"1 Player", "2 Players", "3 Players", "4 Players"};
     private boolean GameOver = false;
     private boolean draw = false;
@@ -37,10 +40,12 @@ public class Game {
             keyAddPlayer(i);
             players[i].setApparence((char) ((int) 'O' + i));
         }
-        AddBoarders();
+        addWalls();
+        AddBoarders(); // needs to be terminated after tail and collision is modified
         addObstaclesToBoard();
     }
 
+    // Boarders can be REMOVED, enhansed to walls instead.
     private void AddBoarders() {
         for (int i = 0; i < board[0].length; i++) {
             board[0][i] = true;
@@ -50,6 +55,33 @@ public class Game {
             board[i][0] = true;
             board[i][board[0].length - 1] = true;
         }
+    }
+
+    private void addWalls() {
+        walls = new ArrayList<>();
+
+
+        for (int i = 0; i < board[0].length; i++) {
+            Coordinates coordinatesFirstWall = new Coordinates(0, i);
+            Wall firstWall = new Wall(coordinatesFirstWall);
+            walls.add(firstWall);
+            Coordinates coordinatesSecondWall = new Coordinates(board.length - 1, i);
+            Wall secondWall = new Wall(coordinatesSecondWall);
+            walls.add(secondWall);
+        }
+        for (int i = 0; i < board.length; i++) {
+            Coordinates coordinatesFirstWall = new Coordinates(i, 0);
+            Wall firstWall = new Wall(coordinatesFirstWall);
+            walls.add(firstWall);
+            Coordinates coordinatesSecondWall = new Coordinates(i, board[0].length - 1);
+            System.out.println();
+            Wall secondWall = new Wall(coordinatesSecondWall);
+            walls.add(secondWall);
+        }
+    }
+
+    public List<Wall> getWalls() {
+        return walls;
     }
 
     //Board methods below
