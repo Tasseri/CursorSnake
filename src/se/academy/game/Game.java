@@ -4,6 +4,7 @@ import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.terminal.Terminal;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.Random;
@@ -18,8 +19,9 @@ public class Game {
     //   private String[] playerList = {"1 Player", "2 Players", "3 Players", "4 Players"};
     private boolean GameOver = false;
     private boolean draw = false;
+    private SettingsParser settingsParser = new SettingsParser();
 
-    public Game(int numberOfPlayers, int numberOfEnemies, Terminal terminal) {
+    public Game(int numberOfPlayers, int numberOfEnemies, Terminal terminal) throws IOException {
         this.players = new Player[numberOfPlayers];
 
         board = new boolean[terminal.getTerminalSize().getColumns()][terminal.getTerminalSize().getRows()];
@@ -40,7 +42,7 @@ public class Game {
     }
 
     private void AddBoarders() {
-        for (int i = 0; i < board[0].length; i++ ) {
+        for (int i = 0; i < board[0].length; i++) {
             board[0][i] = true;
             board[board.length - 1][i] = true;
         }
@@ -75,7 +77,7 @@ public class Game {
     public void addPlayer(int playerNumber) {
         Random rand = new Random();
         if (playerNumber < this.players.length && playerNumber >= 0) {
-            players[playerNumber] = new Player(randomCoordinates());
+            players[playerNumber] = new Player(randomCoordinates(), playerNumber);
         }
     }
 
@@ -84,10 +86,13 @@ public class Game {
     }
 
     public void keyAddPlayer(int playerNumber) {
-        players[playerNumber].setKeyInputRight(JOptionPane.showInputDialog("Välj höger för spelare " +
-                "(R,L,U,D för piltangenter)" + playerNumber).charAt(0));
-        players[playerNumber].setKeyInputLeft(JOptionPane.showInputDialog("Välj vänster för spelare" +
-                "(R,L,U,D för piltangenter)" + playerNumber).charAt(0));
+        String playerName = players[playerNumber].getName();
+        players[playerNumber].setKeyInputRight(settingsParser.getKeySettingsForPlayer(playerName, "Rightkey").charAt(0));
+        players[playerNumber].setKeyInputLeft(settingsParser.getKeySettingsForPlayer(playerName, "Leftkey").charAt(0));
+        //        players[playerNumber].setKeyInputRight(JOptionPane.showInputDialog("Välj höger för spelare " +
+//                "(R,L,U,D för piltangenter)" + playerNumber).charAt(0));
+//        players[playerNumber].setKeyInputLeft(JOptionPane.showInputDialog("Välj vänster för spelare" +
+//                "(R,L,U,D för piltangenter)" + playerNumber).charAt(0));
     }
 
     public boolean isAllPlayersDead() {
@@ -99,9 +104,10 @@ public class Game {
         return true;
 
     }
+
     private void movePlayer(int changeInX, int changeInY, Player player) {
         if (!((player.getCoord().getX() == 0 && changeInX < 0) || (player.getCoord().getX() == board.length && changeInX > 0))) {
-           player.changeOneInX(changeInX);
+            player.changeOneInX(changeInX);
         }
         if (!((player.getCoord().getY() == 0 && changeInY < 0) || (player.getCoord().getY() == board[0].length && changeInY > 0))) {
             player.changeOneInY(changeInY);
@@ -115,6 +121,7 @@ public class Game {
             moveByMomentum(players[i]);
         }
     }
+
     public void moveByMomentum(Player player) {
         if (player.isDead()) {
             //don't move
@@ -181,8 +188,7 @@ public class Game {
         if (enemyNumber % 2 == 0) {
             enemies[enemyNumber] = new StupidEnemy(randomCoordinates());
             enemies[enemyNumber].setApparence('X');
-        }
-        else {
+        } else {
             enemies[enemyNumber] = new SmartEnemy(randomCoordinates());
             enemies[enemyNumber].setApparence('Y');
         }
@@ -207,12 +213,14 @@ public class Game {
     public void gameCountdown() throws InterruptedException {
         gameCountdown(3);
     }
+
     public void gameCountdown(int countDownTimer) throws InterruptedException {
         for (int i = countDownTimer; i > 0; i--) {
             System.out.println("Game starts in: " + i);
             Thread.sleep((long) 1000);
         }
     }
+
     public void playersHitObject() {
         for (int i = 0; i < players.length; i++) {
             playerHitObject(players[i]);
@@ -224,6 +232,7 @@ public class Game {
             player.kill();
         }
     }
+
     public void enemiesTryKillPlayers() {
         for (int i = 0; i < players.length; i++) {
             for (int j = 0; j < enemies.length; j++) {
@@ -271,6 +280,7 @@ public class Game {
     public void endGame() {
         GameOver = true;
     }
+
     public void endGame(boolean playerStillAlive) {
         System.out.println("The Winner is " + onlyOneAlive());
         GameOver = playerStillAlive;
@@ -279,7 +289,7 @@ public class Game {
     private String onlyOneAlive() {
         for (int i = 0; i < players.length; i++) {
             if (!players[i].isDead()) {
-                return "Player " + (i+1);
+                return "Player " + (i + 1);
             }
         }
         return "No players alive";
@@ -298,11 +308,11 @@ public class Game {
         }
         if (counter == 1) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
+
     public void updateState() {
 
         movePlayersByMomentum();
