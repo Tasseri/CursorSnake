@@ -10,7 +10,7 @@ public class Player extends Entity {
     private String name = "Player 1";
 
     //enum ;
-    // om vi berstämmer oss för nya funktioner så tar vi bort dessa constructorer
+    // om vi berstämmer oss för nya funktioner så tar vi bort dessa konstructorer
     // för stundern så overloadar jag bara dom
     public Player(int x, int y) {
         super(x, y);
@@ -19,17 +19,17 @@ public class Player extends Entity {
     public Player(Coordinates coord) {
         super(coord);
     }
+    // gamla konstruktorer ovan
 
     public Player(int x, int y, int number) {
         super(x, y);
-        name = "Player " + (number+ 1 );
+        name = "Player " + (number + 1);
     }
 
     public Player(Coordinates coord, int number) {
         super(coord);
         name = "Player " + (number + 1);
     }
-
 
     public char getKeyInput(int index) {
         return keyInputs[index];
@@ -71,6 +71,5 @@ public class Player extends Entity {
     public String getName() {
         return name;
     }
-
 
 }
