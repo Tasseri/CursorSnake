@@ -1,5 +1,7 @@
 package se.academy.game;
 
+import java.util.Arrays;
+
 /**
  * Created by Administrator on 2016-08-18.
  */
@@ -32,6 +34,20 @@ public class Coordinates {
     public void setY(int y) {
         this.coord[1] = y;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coordinates that = (Coordinates) o;
+        return Arrays.equals(coord, that.coord);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(coord);
+    }
+
     public double distance (Coordinates coord) {
         return Math.sqrt(Math.pow(coord.getX() - this.getX(), 2) + Math.pow(coord.getY() - this.getY(), 2));
     }
@@ -40,5 +56,14 @@ public class Coordinates {
             return true;
         }
         return false;
+    }
+    public Coordinates getRelativeCoord(int x, int y) {
+        return new Coordinates(getRelativeXCoord(x), getRelativeYCoord(y));
+    }
+    public int getRelativeXCoord(int x) {
+        return this.getX() - x;
+    }
+    public int getRelativeYCoord(int y) {
+        return this.getY() - y;
     }
 }

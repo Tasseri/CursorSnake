@@ -18,4 +18,6 @@ public abstract class Enemy extends Entity {
     }
 
     public abstract void moveEnemyTowardsPlayer(Player player);
+
+    public abstract void moveEnemy(Game game);
 }

@@ -94,7 +94,7 @@ public class Game {
         }
     }
 
-    private Coordinates randomCoordinates() {
+    public Coordinates randomCoordinates() {
         Random rand = new Random();
         return new Coordinates(rand.nextInt(board[0].length - 5) + 2, rand.nextInt(board[0].length - 5) + 2);
     }
@@ -216,12 +216,16 @@ public class Game {
     //Enemy methods below
     public void addEnemy(int enemyNumber) {
         Random rand = new Random();
-        if (enemyNumber % 2 == 0) {
+        if (enemyNumber % 3 == 0) {
             enemies[enemyNumber] = new StupidEnemy(randomCoordinates());
             enemies[enemyNumber].setApparence('X');
-        } else {
+        } else if (enemyNumber % 2 == 0){
             enemies[enemyNumber] = new SmartEnemy(randomCoordinates());
             enemies[enemyNumber].setApparence('Y');
+        }
+        else {
+            enemies[enemyNumber] = new Wizard(randomCoordinates());
+            enemies[enemyNumber].setApparence('W');
         }
     }
 
@@ -236,6 +240,11 @@ public class Game {
     public void moveEnemiesTowardsPlayer(Player player) {
         for (Enemy e : enemies) {
             e.moveEnemyTowardsPlayer(player);
+        }
+    }
+    public void moveEnemies() {
+        for (Enemy e : enemies) {
+            e.moveEnemy(this);
         }
     }
     //end of Enemy methods
@@ -273,9 +282,15 @@ public class Game {
     }
 
     public void enemyTryKillPlayer(Player player1, Enemy enemy1) {
-        if ((player1.getCoord().getX() == enemy1.getCoord().getX()) &&
-                (player1.getCoord().getY() == enemy1.getCoord().getY())) {
+        if (player1.getCoord().equals(enemy1.getCoord())) {
             player1.kill();
+        }
+        else if (enemy1 instanceof Wizard) {
+            for (int i = 0; i < enemy1.nearbyCoordinates().length; i++) {
+                if (player1.getCoord().equals( enemy1.nearbyCoordinates()[i])) {
+                    player1.kill();
+                }
+            }
         }
     }
 
@@ -348,6 +363,7 @@ public class Game {
 
         movePlayersByMomentum();
         moveEnemiesTowardsPlayer(getPlayer(0));
+        moveEnemies();
         enemiesTryKillPlayers();
         playersDraw();
         playersHitObject();

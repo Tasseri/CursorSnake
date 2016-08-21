@@ -10,6 +10,9 @@ public class StupidEnemy extends Enemy {
         super(coord);
     }
     public void moveEnemyTowardsPlayer(Player player) {
+
+    }
+    public void moveEnemy(Game game) {
         Random rand = new Random();
         int r = rand.nextInt(10);
         if (r > 7) {

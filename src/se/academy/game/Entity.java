@@ -34,6 +34,20 @@ public abstract class Entity {
         return coord;
     }
 
+    public Coordinates getRelativeCoord(int x, int y) {
+        return coord.getRelativeCoord(x,y);
+    }
+
+    public Coordinates[] nearbyCoordinates() {
+        Coordinates[] temp = new Coordinates[9];
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++ ) {
+                temp[j + i] = this.getRelativeCoord(i, j);
+            }
+        }
+        return temp;
+    }
+
     public void changeOneInX(int change) {
         if (change > 0) {
             addOneToX();
