@@ -11,7 +11,7 @@ public class SmartEnemy extends Enemy {
     }
 
     public void moveEnemyTowardsPlayer(Player player) {
-        if (Math.abs(this.getCoord().getX() - player.getCoord().getX()) >= Math.abs(this.getCoord().getY() - player.getCoord().getY())) {
+        if (!this.getCoord().isDistanceInXlessThanInY(player.getCoord())) {
             Random rnd = new Random();
             int temp = rnd.nextInt(10);
             if (8 > rnd.nextInt(10)) {

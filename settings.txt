@@ -2,8 +2,8 @@
        "_comment": "Default settings (json formating)",
 	"Players": {
 		"Player 1": {
-			"Rightkey" : "d",
-			"Leftkey"  : "a" 
+		    "Rightkey" : "d",
+		    "Leftkey"  : "a"
 		},
 		"Player 2": {
 			"Rightkey" : "R",

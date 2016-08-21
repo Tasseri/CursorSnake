@@ -32,4 +32,13 @@ public class Coordinates {
     public void setY(int y) {
         this.coord[1] = y;
     }
+    public double distance (Coordinates coord) {
+        return Math.sqrt(Math.pow(coord.getX() - this.getX(), 2) + Math.pow(coord.getY() - this.getY(), 2));
+    }
+    public boolean isDistanceInXlessThanInY(Coordinates coord) {
+        if (Math.abs(coord.getX() - this.getX()) < Math.abs(coord.getY() - this.getY())) {
+            return true;
+        }
+        return false;
+    }
 }

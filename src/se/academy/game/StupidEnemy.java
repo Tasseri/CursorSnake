@@ -15,13 +15,13 @@ public class StupidEnemy extends Enemy {
         if (r > 7) {
             changeOneInX(1);
         }
-        if (r > 5) {
+        else if (r > 5) {
             changeOneInY(-1);
         }
-        if (r > 3) {
+        else if (r > 3) {
             changeOneInX(-1);
         }
-        if (r > 1) {
+        else if (r > 1) {
             changeOneInY(1);
         }
     }

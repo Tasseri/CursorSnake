@@ -3,7 +3,6 @@ package se.academy.game;
 import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.terminal.Terminal;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalTime;
@@ -195,10 +194,10 @@ public class Game {
                         if (players[i].getKeyInput(j) == keyKind && !keysPressed[i]) {
                             switch (j) {
                                 case 0:
-                                    players[i].changeMomentum(1);
+                                    players[i].changeMomentum(-1);
                                     break;
                                 case 1:
-                                    players[i].changeMomentum(-1);
+                                    players[i].changeMomentum(1);
                                     break;
                             }
                             keysPressed[i] = true;
