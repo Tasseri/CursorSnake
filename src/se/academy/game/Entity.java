@@ -8,22 +8,22 @@ import java.util.List;
  */
 public abstract class Entity {
     private Coordinates coord;
-    private List<Coordinates> movements;
+    private List<Coordinates> size;
     private char Apparence = 'N';
 
     public Entity() {
         coord = new Coordinates(0, 0);
-        movements = new LinkedList<>(); //arraydeck
+        size = new LinkedList<>(); //arraydeck
     }
 
     public Entity(int x, int y) {
         coord = new Coordinates(x, y);
-        movements = new LinkedList<>();
+        size = new LinkedList<>();
     }
 
     public Entity(Coordinates coord) {
         this.coord = coord;
-        movements = new LinkedList<>();
+        size = new LinkedList<>();
     }
 
     public void setCoord(Coordinates coordinates) {
@@ -80,12 +80,12 @@ public abstract class Entity {
         coord.setY(coord.getY() - 1);
     }
 
-    public void trackMovement(int x, int y) {
-        movements.add(new Coordinates(x, y));
+    public void addToSize(int x, int y) {
+        size.add(new Coordinates(x, y));
     }
 
-    public int howManySquaresMoved() {
-        return movements.size();
+    public int howLarge() {
+        return size.size();
     }
 
     public char getApparence() {

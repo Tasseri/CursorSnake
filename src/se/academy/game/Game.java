@@ -96,7 +96,7 @@ public class Game {
 
     public Coordinates randomCoordinates() {
         Random rand = new Random();
-        return new Coordinates(rand.nextInt(board[0].length - 5) + 2, rand.nextInt(board[0].length - 5) + 2);
+        return new Coordinates(rand.nextInt(board.length - 5) + 2, rand.nextInt(board[0].length - 5) + 2);
     }
     //end of Board methods
 
@@ -147,7 +147,7 @@ public class Game {
 
     public void movePlayersByMomentum() {
         for (int i = 0; i < players.length; i++) { //Applies the momentum and moves the player
-            players[i].trackMovement(players[i].getCoord().getX(), players[i].getCoord().getY());
+            players[i].addToSize(players[i].getCoord().getX(), players[i].getCoord().getY());
 
             moveByMomentum(players[i]);
         }
