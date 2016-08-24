@@ -5,6 +5,8 @@ package se.academy.game;
  */
 public class Wall extends Entity {
 
+    public Wall() {    }
+
     public Wall(Coordinates coordinates) {
         this.setApparence('\u2588');
         this.setCoord(coordinates);

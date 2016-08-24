@@ -83,6 +83,9 @@ public abstract class Entity {
     public void addToSize(int x, int y) {
         size.add(new Coordinates(x, y));
     }
+    public void addToSize(Coordinates coord) {
+        size.add(new Coordinates(coord.getX(), coord.getY()));
+    }
 
     public int howLarge() {
         return size.size();
