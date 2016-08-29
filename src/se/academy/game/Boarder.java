@@ -4,23 +4,22 @@ package se.academy.game;
  * Created by Administrator on 2016-08-24.
  */
 public final class Boarder extends Wall {
-    Boarder(Coordinates boardmin, Coordinates boardmax) {
-        for (int i = boardmin.getY(); i < boardmax.getY(); i++) {
-            for (int j = boardmin.getX(); j < boardmax.getX(); j++) {
-                if (boardmin.getY() == i) {
+    Boarder(Coordinates boardMin, Coordinates boardMax) {
+        for (int i = boardMin.getY(); i < boardMax.getY(); i++) {
+            for (int j = boardMin.getX(); j < boardMax.getX(); j++) {
+                if (boardMin.getY() == i) {
                     addToSize(j, i);
                 }
-                else if (boardmax.getY() == i) {
+                else if (boardMax.getY() == i) {
                     addToSize(j, i);
                 }
-                else if (boardmin.getX() == j) {
+                else if (boardMin.getX() == j) {
                     addToSize(j, i);
                 }
-                else if (boardmax.getY() == j) {
+                else if (boardMax.getY() == j) {
                     addToSize(j, i);
                 }
             }
         }
-
     }
 }

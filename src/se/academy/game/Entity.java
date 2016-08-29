@@ -87,6 +87,10 @@ public abstract class Entity {
         size.add(new Coordinates(coord.getX(), coord.getY()));
     }
 
+    public void removeFromSize(Coordinates coord) {
+        size.remove(coord);
+    }
+
     public int howLarge() {
         return size.size();
     }

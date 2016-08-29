@@ -11,4 +11,8 @@ public class Wall extends Entity {
         this.setApparence('\u2588');
         this.setCoord(coordinates);
     }
+
+    public void addOpening(Coordinates coord) {
+        removeFromSize(coord);
+    }
 }

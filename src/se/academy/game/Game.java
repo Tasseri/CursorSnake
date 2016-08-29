@@ -18,13 +18,13 @@ public class Game {
     private Player[] players;
     private Enemy[] enemies;
     private List<Wall> walls;
-    //   private String[] playerList = {"1 Player", "2 Players", "3 Players", "4 Players"};
-    private boolean GameOver = false;
-    private boolean draw = false;
+    private RuleBook rules;
+
     private SettingsParser settingsParser = new SettingsParser();
 
-    public Game(int numberOfPlayers, int numberOfEnemies, Terminal terminal) throws IOException {
+    public Game(int numberOfPlayers, int numberOfEnemies, Terminal terminal, RuleBook rules) throws IOException {
         this.players = new Player[numberOfPlayers];
+        this.rules = rules;
 
         board = new boolean[terminal.getTerminalSize().getColumns()][terminal.getTerminalSize().getRows()];
 
@@ -126,48 +126,6 @@ public class Game {
 //                "(R,L,U,D för piltangenter)" + playerNumber).charAt(0));
     }
 
-    public boolean isAllPlayersDead() {
-        for (Player p : players) {
-            if (!p.isDead()) {
-                return false;
-            }
-        }
-        return true;
-
-    }
-
-    private void movePlayer(int changeInX, int changeInY, Player player) {
-        if (!((player.getCoord().getX() == 0 && changeInX < 0) || (player.getCoord().getX() == board.length && changeInX > 0))) {
-            player.changeOneInX(changeInX);
-        }
-        if (!((player.getCoord().getY() == 0 && changeInY < 0) || (player.getCoord().getY() == board[0].length && changeInY > 0))) {
-            player.changeOneInY(changeInY);
-        }
-    }
-
-    public void movePlayersByMomentum() {
-        for (int i = 0; i < players.length; i++) { //Applies the momentum and moves the player
-            players[i].addToSize(players[i].getCoord().getX(), players[i].getCoord().getY());
-
-            moveByMomentum(players[i]);
-        }
-    }
-
-    public void moveByMomentum(Player player) {
-        if (player.isDead()) {
-            //don't move
-        } else if (player.getMomentumOfPlayer() == 'U') {
-            movePlayer(0, -1, player);
-        } else if (player.getMomentumOfPlayer() == 'D') {
-            movePlayer(0, 1, player);
-        } else if (player.getMomentumOfPlayer() == 'R') {
-            movePlayer(1, 0, player);
-        } else if (player.getMomentumOfPlayer() == 'L') {
-            movePlayer(-1, 0, player);
-        }
-
-    }
-
     /**
      * takes keyinputs calculates which Player it belongs to and changes the momentum of the player in that direction.
      *
@@ -237,102 +195,17 @@ public class Game {
         return enemies;
     }
 
-    public void moveEnemiesTowardsPlayer(Player player) {
-        for (Enemy e : enemies) {
-            e.moveEnemyTowardsPlayer(player);
-        }
-    }
-    public void moveEnemies() {
-        for (Enemy e : enemies) {
-            e.moveEnemy(this);
-        }
-    }
+
     //end of Enemy methods
 
-    //game logic methods follow
-    public void gameCountdown() throws InterruptedException {
-        gameCountdown(3);
+    //game help methods follow
+    public boolean isGameOver() {
+        return rules.isGameOver();
     }
-
-    public void gameCountdown(int countDownTimer) throws InterruptedException {
-        for (int i = countDownTimer; i > 0; i--) {
-            System.out.println("Game starts in: " + i);
-            Thread.sleep((long) 1000);
-        }
+    public boolean isGameDraw() {
+        return rules.isDraw();
     }
-
-    public void playersHitObject() {
-        for (int i = 0; i < players.length; i++) {
-            playerHitObject(players[i]);
-        }
-    }
-
-    public void playerHitObject(Player player) {
-        if (board[player.getCoord().getX()][player.getCoord().getY()]) {
-            player.kill();
-        }
-    }
-
-    public void enemiesTryKillPlayers() {
-        for (int i = 0; i < players.length; i++) {
-            for (int j = 0; j < enemies.length; j++) {
-                enemyTryKillPlayer(players[i], enemies[j]);
-            }
-        }
-    }
-
-    public void enemyTryKillPlayer(Player player1, Enemy enemy1) {
-        if (player1.getCoord().equals(enemy1.getCoord())) {
-            player1.kill();
-        }
-        else if (enemy1 instanceof Wizard) {
-            for (int i = 0; i < enemy1.nearbyCoordinates().length; i++) {
-                if (player1.getCoord().equals( enemy1.nearbyCoordinates()[i])) {
-                    player1.kill();
-                }
-            }
-        }
-    }
-
-    public void playerDraw(Player player1, Player player2) {
-        boolean deadAlready = false;
-        if ((player1.getCoord().getX() == player2.getCoord().getX()) &&
-                (player1.getCoord().getY() == player2.getCoord().getY())) {
-            if (player1.isDead() || player2.isDead()) {
-                deadAlready = true;
-            }
-            player1.kill();
-            player2.kill();
-            if (isAllPlayersDead() && !deadAlready) {
-                draw = true;
-            }
-        }
-    }
-
-    public void playersDraw() {
-        for (int i = 0; i < players.length - 1; i++) {
-            for (int j = i + 1; j < players.length; j++) {
-                if (i != j) {
-                    playerDraw(players[i], players[j]);
-                }
-            }
-        }
-    }
-
-    public boolean isDraw() {
-        return draw;
-    }
-
-    public void endGame() {
-        GameOver = true;
-    }
-
-    public void endGame(boolean playerStillAlive) {
-        System.out.println("The Winner is " + onlyOneAlive());
-        GameOver = playerStillAlive;
-    }
-
-    private String onlyOneAlive() {
+    public String onlyOneAlive() {
         for (int i = 0; i < players.length; i++) {
             if (!players[i].isDead()) {
                 return "Player " + (i + 1);
@@ -340,9 +213,18 @@ public class Game {
         }
         return "No players alive";
     }
+    public boolean isAllPlayersDead() {
+        for (Player p : players) {
+            if (!p.isDead()) {
+                return false;
+            }
+        }
+        return true;
 
-    public boolean isGameOver() {
-        return GameOver;
+    }
+    public void endGame(boolean playerStillAlive) {
+        System.out.println("The Winner is " + onlyOneAlive());
+        rules.endGame();
     }
 
     public boolean isOnlyOnePlayerAlive() {
@@ -358,19 +240,29 @@ public class Game {
             return false;
         }
     }
+    public void gameCountdown() throws InterruptedException {
+        gameCountdown(3);
+    }
+
+    public void gameCountdown(int countDownTimer) throws InterruptedException {
+        for (int i = countDownTimer; i > 0; i--) {
+            System.out.println("Game starts in: " + i);
+            Thread.sleep((long) 1000);
+        }
+    }
 
     public void updateState() {
 
-        movePlayersByMomentum();
-        moveEnemiesTowardsPlayer(getPlayer(0));
-        moveEnemies();
-        enemiesTryKillPlayers();
-        playersDraw();
-        playersHitObject();
+        rules.movePlayersByMomentum(this.players, this);
+        rules.moveEnemiesTowardsPlayer(getPlayer(0), enemies);
+        rules.moveEnemies(enemies, this);
+        rules.enemiesTryKillPlayers(this.players, this.enemies);
+        rules.playersDraw(this.players, this);
+        rules.playersHitObject(this.players, this);
         if (players.length > 1 && isOnlyOnePlayerAlive()) {
             endGame(isOnlyOnePlayerAlive());
         } else if (isAllPlayersDead()) {
-            endGame();
+            rules.endGame();
         }
         addObstaclesToBoard();
     }

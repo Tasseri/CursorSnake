@@ -17,6 +17,7 @@ public class Main {
         String newGame = "y";
         do {
             terminal.clearScreen();
+            RuleBook rule = new SnakeRules();
             String numberOfPlayers = (String) JOptionPane.showInputDialog(null, "Välj Antal Spelare", "Antal Spelare",
                     JOptionPane.QUESTION_MESSAGE, null, playerList, playerList[0]);
             if (numberOfPlayers == null) {
@@ -27,12 +28,11 @@ public class Main {
 
             int numberOfEnemies = players == 1 ? 3 : 0;
 
-            Game game = new Game(players, numberOfEnemies, terminal);
+            Game game = new Game(players, numberOfEnemies, terminal, rule);
             updateScreen(game, terminal);
             game.gameCountdown();
 
             do {
-
                 game.changeMomentumOfPlayers(terminal);
                 game.updateState();
                 updateScreen(game, terminal);
@@ -40,7 +40,7 @@ public class Main {
             } while (!game.isGameOver());
             updateScreen(game, terminal);
             System.out.println("Game Over!");
-            if (game.isDraw()) {
+            if (game.isGameDraw()) {
                 System.out.println("Nobody Wins!");
             }
             newGame = JOptionPane.showInputDialog("New game? (y/n");
@@ -65,13 +65,10 @@ public class Main {
         }
         // old walls ends here, need to sort out tail before removal
 
-        for (Wall wall :
-                game.getWalls()) {
+        for (Wall wall : game.getWalls()) {
 
             terminal.moveCursor(wall.getCoord().getX(), wall.getCoord().getY());
-            // System.out.println(wall.getCoord().getX() + " " + wall.getCoord().getY());
             terminal.putCharacter(wall.getApparence());
-           // System.out.println(walcount++);
 
         }
         for (int i = 0; i < game.getPlayers().length; i++) {
