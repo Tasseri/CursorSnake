@@ -20,7 +20,7 @@ public class Game {
     private List<Wall> walls;
     private RuleBook rules;
 
-    private SettingsParser settingsParser = new SettingsParser();
+    private Settings settings = new SettingsParser();
 
     public Game(int numberOfPlayers, int numberOfEnemies, Terminal terminal, RuleBook rules) throws IOException {
         this.players = new Player[numberOfPlayers];
@@ -118,8 +118,8 @@ public class Game {
 
     public void keyAddPlayer(int playerNumber) {
         String playerName = players[playerNumber].getName();
-        players[playerNumber].setKeyInputRight(settingsParser.getKeySettingsForPlayer(playerName, "Rightkey").charAt(0));
-        players[playerNumber].setKeyInputLeft(settingsParser.getKeySettingsForPlayer(playerName, "Leftkey").charAt(0));
+        players[playerNumber].setKeyInputRight(settings.getKeySettingsForPlayer(playerName, "Rightkey").charAt(0));
+        players[playerNumber].setKeyInputLeft(settings.getKeySettingsForPlayer(playerName, "Leftkey").charAt(0));
         //        players[playerNumber].setKeyInputRight(JOptionPane.showInputDialog("Välj höger för spelare " +
 //                "(R,L,U,D för piltangenter)" + playerNumber).charAt(0));
 //        players[playerNumber].setKeyInputLeft(JOptionPane.showInputDialog("Välj vänster för spelare" +

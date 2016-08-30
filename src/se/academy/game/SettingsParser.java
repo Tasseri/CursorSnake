@@ -9,7 +9,7 @@ import org.json.JSONObject;
 /**
  * Created by mohed on 2016-08-20.
  */
-public class SettingsParser {
+public class SettingsParser implements Settings {
     private String jsonData = "";
     private BufferedReader br = null;
     private String line;
@@ -23,6 +23,7 @@ public class SettingsParser {
         settingsJson = new JSONObject(jsonData);
     }
 
+    @Override
     public String getKeySettingsForPlayer(String player, String key) {
         return settingsJson.getJSONObject("Players").getJSONObject(player).getString(key);
     }

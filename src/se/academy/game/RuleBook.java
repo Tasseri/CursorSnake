@@ -4,7 +4,7 @@ package se.academy.game;
  * Created by Administrator on 2016-08-29.
  */
 public abstract class RuleBook {
-    private boolean GameOver = false;
+    private boolean gameOver = false;
     private boolean draw = false;
 
     public void playersHitObject(Player[] players, Game game) {
@@ -27,7 +27,7 @@ public abstract class RuleBook {
         }
     }
 
-    public void enemyTryKillPlayer(Player player1, Enemy enemy1) {
+    public void enemyTryKillPlayer(Player player1, Entity enemy1) {
         if (player1.getCoord().equals(enemy1.getCoord())) {
             player1.kill();
         }
@@ -116,10 +116,10 @@ public abstract class RuleBook {
     }
 
     public void endGame() {
-        GameOver = true;
+        gameOver = true;
     }
 
     public boolean isGameOver() {
-        return GameOver;
+        return gameOver;
     }
 }

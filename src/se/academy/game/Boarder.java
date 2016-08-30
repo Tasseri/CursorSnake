@@ -5,8 +5,8 @@ package se.academy.game;
  */
 public final class Boarder extends Wall {
     Boarder(Coordinates boardMin, Coordinates boardMax) {
-        for (int i = boardMin.getY(); i < boardMax.getY(); i++) {
-            for (int j = boardMin.getX(); j < boardMax.getX(); j++) {
+        for (int i = boardMin.getY(); i <= boardMax.getY(); i++) {
+            for (int j = boardMin.getX(); j <= boardMax.getX(); j++) {
                 if (boardMin.getY() == i) {
                     addToSize(j, i);
                 }
